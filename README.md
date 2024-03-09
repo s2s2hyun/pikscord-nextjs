@@ -1,6 +1,8 @@
-프레임워크:Next.js
+프레임워크:Next.js 
 Style : tailwind-css
-라이브러리: ui.shadcn
+라이브러리: ui.shadcn 를 통한 button, drop-down components 추가 
+데이터 베이스 및 ORM: Supabase , Prisma 세팅중
+
 
 1. 초기 세팅중 socket.io 를 통한 채팅 구현 예정
 2. Prisma 를 통한 데이터베이스 연동 예정
