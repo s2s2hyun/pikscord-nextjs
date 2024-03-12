@@ -1,11 +1,17 @@
-프레임워크:Next.js 
+프레임워크:Next.js
 Style : tailwind-css
-라이브러리: ui.shadcn 를 통한 button, drop-down components 추가 
-데이터 베이스 및 ORM: Supabase , Prisma 세팅중
+라이브러리: ui.shadcn components 추가
+데이터 베이스 및 ORM: Supabase , Prisma 세팅
+이미지 파일 관리: uploadthing(2GB 무료)
+폼 유효성 검사: zod 사용
+로그인폼: clerk 라이브러리
 
+## 프로젝트
+
+### 디스코드를 Next.js app router 구조로 따라만들어보기
 
 1. 초기 세팅중 socket.io 를 통한 채팅 구현 예정
-2. Prisma 를 통한 데이터베이스 연동 예정
+2. Prisma 를 통한 데이터베이스 연동
 3. 상태관리 zustand 세팅 예정
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
