@@ -2,7 +2,7 @@
 Style : tailwind-css
 라이브러리: ui.shadcn components 추가
 데이터 베이스 및 ORM: Supabase , Prisma 세팅
-이미지 파일 관리: uploadthing(2GB 무료)
+이미지 파일 관리: uploadthing(2GB 무료) aws s3 와 비슷한 유형의 무료 라이브러리
 폼 유효성 검사: zod 사용
 로그인폼: clerk 라이브러리
 
