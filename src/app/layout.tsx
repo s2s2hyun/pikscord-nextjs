@@ -19,7 +19,8 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressContentEditableWarning>
+      <html lang="en" suppressHydrationWarning>
+        {/* <html lang="en" suppressContentEditableWarning> */}
         <body className={cn(font.className, "bg-white dark:bg-[#313338]")}>
           <NextThemesProvider
             attribute="class"
