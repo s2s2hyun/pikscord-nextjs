@@ -23,6 +23,7 @@ model Profile {
 
   servers Server[]
   members Member[]
+  channels Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,6 +39,7 @@ model Profile {
   profile Profile @relation(fields: [profileId], references : [id] , onDelete: Cascade)
  
   members  Member[]
+  channels Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -78,11 +80,21 @@ model Profile {
   VIDEO
  }
 
- model Channel {
-
+model Channel {
   id String @id @default(uuid())
   name String
   type ChannelType @default(TEXT)
 
   profileId String
- }
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId String
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
+}
