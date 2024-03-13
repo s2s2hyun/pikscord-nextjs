@@ -1,10 +1,10 @@
-프레임워크:Next.js
-Style : tailwind-css
-라이브러리: ui.shadcn components 추가
-데이터 베이스 및 ORM: Supabase , Prisma 세팅
-이미지 파일 관리: uploadthing(2GB 무료) aws s3 와 비슷한 유형의 무료 라이브러리
-폼 유효성 검사: zod 사용
-로그인폼: clerk 라이브러리
+프레임워크:Next.js <br />
+Style : tailwind-css <br />
+라이브러리: ui.shadcn components 추가 <br />
+데이터 베이스 및 ORM: Supabase , Prisma 세팅 <br />
+이미지 파일 관리: uploadthing(2GB 무료) aws s3 와 비슷한 유형의 무료 라이브러리 <br /> 
+폼 유효성 검사: zod 사용<br /> 
+로그인폼: clerk 라이브러리<br />
 
 ## 프로젝트
 
