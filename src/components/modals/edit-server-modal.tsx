@@ -112,7 +112,7 @@ export const EditServerModal = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                        픽스코드 닉네임
+                        픽스코드 채팅서버 이름
                       </FormLabel>
                       <FormControl>
                         <Input
