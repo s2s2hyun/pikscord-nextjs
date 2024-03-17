@@ -65,9 +65,11 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2B2D31] bg-[#F2F3F5]">
-      <ServerHeader server={server} role={role} />
+      <ServerHeader server={server as any} role={role} />
     </div>
   );
 };
 
 export default ServerSidebar;
+
+// 타입 추론 추후 수정 예정
