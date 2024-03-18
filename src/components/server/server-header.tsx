@@ -55,7 +55,7 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
             onClick={() => onOpen("editServer", { server })}
             className=" px-3 py-2 text-sm cursor-pointer"
           >
-            채팅 서버 설정
+            서버 설정
             <Settings className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>
         )}
@@ -70,7 +70,10 @@ export const ServerHeader = ({ server, role }: ServerHeaderProps) => {
         )}
 
         {isModerator && (
-          <DropdownMenuItem className=" px-3 py-2 text-sm cursor-pointer">
+          <DropdownMenuItem
+            className=" px-3 py-2 text-sm cursor-pointer"
+            onClick={() => onOpen("createChannel")}
+          >
             채널 만들기
             <PlusCircle className="h-4 w-4 ml-auto" />
           </DropdownMenuItem>

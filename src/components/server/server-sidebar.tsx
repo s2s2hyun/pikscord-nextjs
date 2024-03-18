@@ -72,4 +72,5 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
 
 export default ServerSidebar;
 
+// 서버 컴포넌트 , 자식노드를 클라이언트 컴포넌트로 둘시 import 가 가능하다. 그외 다른방면으론 import 가 불가능하다. 인지
 // 타입 추론 추후 수정 예정
