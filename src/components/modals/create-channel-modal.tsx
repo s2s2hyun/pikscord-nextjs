@@ -67,14 +67,18 @@ export const CreateChannelModal = () => {
 
   const isLoading = form.formState.isSubmitting;
 
+  // console.log("Server ID:", params.serversId);
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
         url: "/api/channels",
         query: {
-          serverId: params?.serverId,
+          serverId: params?.serversId,
         },
       });
+      // console.log("Request URL:", url);
+
       await axios.post(url, values);
 
       form.reset();
@@ -118,7 +122,7 @@ export const CreateChannelModal = () => {
                            focus-visible:ring-0
                             text-black 
                             focus-visible:ring-offset-0"
-                          placeholder="채널을 입력해주세요 "
+                          placeholder="채널을 입력해주세요"
                           {...field}
                         />
                       </FormControl>
