@@ -5,7 +5,6 @@ import qs from "query-string";
 import { ChannelType } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   Dialog,
@@ -67,17 +66,17 @@ export const CreateChannelModal = () => {
 
   const isLoading = form.formState.isSubmitting;
 
-  // console.log("Server ID:", params.serversId);
+  // console.log("Server ID:", params);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const url = qs.stringifyUrl({
         url: "/api/channels",
         query: {
-          serverId: params?.serversId,
+          serverId: params.serverId,
         },
       });
-      // console.log("Request URL:", url);
+      console.log("Request URL:", url);
 
       await axios.post(url, values);
 
