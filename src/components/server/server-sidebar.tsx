@@ -158,7 +158,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
           <div className="mb-2">
             <ServerSection
               sectionType="channels"
-              channelType={ChannelType.TEXT}
+              channelType={ChannelType.AUDIO}
               role={role}
               label="audio Channels"
             />
@@ -179,7 +179,7 @@ const ServerSidebar = async ({ serverId }: ServerSidebarProps) => {
           <div className="mb-2">
             <ServerSection
               sectionType="channels"
-              channelType={ChannelType.TEXT}
+              channelType={ChannelType.VIDEO}
               role={role}
               label="video Channels"
             />
