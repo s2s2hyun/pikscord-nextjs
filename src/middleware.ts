@@ -1,12 +1,15 @@
 import { authMiddleware } from "@clerk/nextjs";
 
 export default authMiddleware({
-  // Routes that can be accessed while signed out
-  publicRoutes: ["/api/uploadthing", "/api/socekt"],
+  // 존재하는 경로들만 설정
+  publicRoutes: [
+    "/api/uploadthing",
+    "/api/channels",
+    "/api/members",
+    "/api/servers",
+  ],
   debug: false,
-  // Routes that can always be accessed, and have
-  // no authentication information
-  // ignoredRoutes: ["/no-auth-in-this-route"],
+  // 필요에 따라 ignoredRoutes도 수정
 });
 
 export const config = {
