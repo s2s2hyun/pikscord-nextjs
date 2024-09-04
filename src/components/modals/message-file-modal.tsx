@@ -51,6 +51,7 @@ export const MessageFileModal = () => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("Form submitted", values);
     try {
       const url = qs.stringifyUrl({
         url: apiUrl || "",
@@ -103,8 +104,13 @@ export const MessageFileModal = () => {
                 </div>
               </div>
               <DialogFooter className="bg-gray-100 px-6 py-4">
-                <Button disabled={isLoading} variant="primary" className="">
-                  Send
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  variant="primary"
+                  className=""
+                >
+                  Send123
                 </Button>
               </DialogFooter>
             </form>
