@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import qs from "query-string";
 import { useModal } from "@/hooks/use-modal-store";
 import { useRouter, useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ChatItemProps {
   id: string;
@@ -66,7 +67,7 @@ export const ChatItem = ({
   const { onOpen } = useModal();
   const params = useParams();
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const onMemberClick = () => {
     if (member.id === currentMember.id) {
       return;
@@ -95,6 +96,31 @@ export const ChatItem = ({
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const originalContent = content;
+    const optimisticUpdate = {
+      ...values,
+      id,
+      member,
+      timestamp,
+      fileUrl,
+      deleted,
+      isUpdated: true,
+    };
+
+    // 옵티미스틱 업데이트
+    queryClient.setQueryData(
+      [`chat:${socketQuery.channelId}`],
+      (oldData: any) => ({
+        ...oldData,
+        pages: oldData.pages.map((page: any) => ({
+          ...page,
+          items: page.items.map((item: any) =>
+            item.id === id ? optimisticUpdate : item
+          ),
+        })),
+      })
+    );
+
     try {
       const url = qs.stringifyUrl({
         url: `${socketUrl}/${id}`,
@@ -103,10 +129,22 @@ export const ChatItem = ({
 
       await axios.patch(url, values);
 
-      form.reset();
       setIsEditing(false);
     } catch (error) {
       console.log(error, "에러");
+      // 에러 발생 시 원래 상태로 되돌리기
+      queryClient.setQueryData(
+        [`chat:${socketQuery.channelId}`],
+        (oldData: any) => ({
+          ...oldData,
+          pages: oldData.pages.map((page: any) => ({
+            ...page,
+            items: page.items.map((item: any) =>
+              item.id === id ? { ...item, content: originalContent } : item
+            ),
+          })),
+        })
+      );
     }
   };
 

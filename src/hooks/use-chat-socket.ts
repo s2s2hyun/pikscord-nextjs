@@ -21,43 +21,23 @@ export const useChatSocket = ({
   queryKey,
 }: ChatSocketProps) => {
   const { socket } = useSocket();
-
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    console.log("useChatSocket 효과 실행, socket 상태:", !!socket);
+
     if (!socket) {
+      console.log("소켓 연결이 없습니다.");
       return;
     }
 
-    socket.on(updateKey, (message: MessageWithMemberWithProfile) => {
+    console.log("소켓 연결 상태:", socket.connected);
+
+    const handleNewMessage = (message: MessageWithMemberWithProfile) => {
+      console.log("새 메시지 수신:", message);
       queryClient.setQueryData([queryKey], (oldData: any) => {
         if (!oldData || !oldData.pages || oldData.pages.length === 0) {
-          return oldData;
-        }
-
-        const newData = oldData.pages.map((page: any) => {
-          return {
-            ...page,
-            items: page.items.map((item: MessageWithMemberWithProfile) => {
-              if (item.id === message.id) {
-                return message;
-              }
-
-              return item;
-            }),
-          };
-        });
-
-        return {
-          ...oldData,
-          page: newData,
-        };
-      });
-    });
-
-    socket.on(addKey, (message: MessageWithMemberWithProfile) => {
-      queryClient.setQueryData([queryKey], (oldData: any) => {
-        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          console.log("기존 데이터 없음, 새 데이터 생성");
           return {
             pages: [
               {
@@ -66,24 +46,51 @@ export const useChatSocket = ({
             ],
           };
         }
-        const newData = [...oldData.pages];
 
+        const newData = [...oldData.pages];
         newData[0] = {
           ...newData[0],
           items: [message, ...newData[0].items],
         };
 
+        console.log("업데이트된 쿼리 데이터:", newData);
         return {
           ...oldData,
-
           pages: newData,
         };
       });
-    });
+    };
+
+    const handleUpdateMessage = (message: MessageWithMemberWithProfile) => {
+      console.log("메시지 업데이트 수신:", message);
+      queryClient.setQueryData([queryKey], (oldData: any) => {
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          console.log("업데이트할 데이터 없음");
+          return oldData;
+        }
+
+        const newData = oldData.pages.map((page: any) => ({
+          ...page,
+          items: page.items.map((item: MessageWithMemberWithProfile) =>
+            item.id === message.id ? message : item
+          ),
+        }));
+
+        console.log("메시지 업데이트 후 데이터:", newData);
+        return {
+          ...oldData,
+          pages: newData,
+        };
+      });
+    };
+
+    socket.on(addKey, handleNewMessage);
+    socket.on(updateKey, handleUpdateMessage);
 
     return () => {
-      socket.off(addKey);
-      socket.off(updateKey);
+      console.log("소켓 이벤트 리스너 제거");
+      socket.off(addKey, handleNewMessage);
+      socket.off(updateKey, handleUpdateMessage);
     };
-  }, [queryClient, addKey, queryKey, socket, updateKey]);
+  }, [queryClient, addKey, updateKey, queryKey, socket]);
 };

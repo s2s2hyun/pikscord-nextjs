@@ -1,11 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-
-import { io as ClientIo } from "socket.io-client";
+import { io as ClientIo, Socket } from "socket.io-client";
 
 type SocketContextType = {
-  socket: any | null;
+  socket: Socket | null;
   isConnected: boolean;
 };
 
@@ -19,31 +18,51 @@ export const useSocket = () => {
 };
 
 export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
-  const [socket, setSocket] = useState(null);
-
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    const socketInstance = new (ClientIo as any)(
-      process.env.NEXT_PUBLIC_SITE_URL || "http:localhost:3000",
-      {
-        path: "/api/socket/io",
-        addTrailingSlash: false,
-      }
-    );
-    socketInstance.on("connect", () => {
-      setIsConnected(true);
-    });
+    try {
+      const socketInstance = ClientIo(
+        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+        {
+          path: "/api/socket/io",
+        }
+      );
 
-    socketInstance.on("disconnect", () => {
-      setIsConnected(false);
-    });
+      socketInstance.on("connect", () => {
+        console.log("Socket connected:", socketInstance.id);
+        setIsConnected(true);
+      });
 
-    setSocket(socketInstance);
+      socketInstance.on("disconnect", () => {
+        console.log("Socket disconnected");
+        setIsConnected(false);
+      });
 
-    return () => {
-      socketInstance.disconnect();
-    };
+      // 연결 에러 핸들링
+      socketInstance.on("connect_error", (err) => {
+        console.error(
+          "Socket connection error:",
+          err.message,
+          err,
+          "<<<<<++++++에러가 뭐야 "
+        );
+      });
+
+      // 다른 에러 처리 (ex: authorization error)
+      socketInstance.on("error", (err) => {
+        console.error("Socket error:", err);
+      });
+
+      setSocket(socketInstance);
+
+      return () => {
+        socketInstance.disconnect();
+      };
+    } catch (error) {
+      console.error("Error setting up socket instance:", error);
+    }
   }, []);
 
   return (

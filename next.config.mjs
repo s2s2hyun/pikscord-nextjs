@@ -14,10 +14,13 @@ const nextConfig = {
       "utf-8-validate": "commonjs utf-8-validate",
       bufferutil: "commonjs bufferutil",
     });
-    return config; // 수정된 config를 반환합니다.
+    return config;
   },
   images: {
     remotePatterns: [{ hostname: "uploadthing.com" }, { hostname: "utfs.io" }],
+  },
+  experimental: {
+    esmExternals: false,
   },
 };
 

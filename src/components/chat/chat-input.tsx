@@ -13,6 +13,7 @@ import qs from "query-string";
 import { useModal } from "@/hooks/use-modal-store";
 import { EmojiPicker } from "@/components/modals/emoji-picker";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ChatInputProps {
   apiUrl: string;
@@ -28,6 +29,7 @@ const formSchema = z.object({
 export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const { onOpen } = useModal();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,15 +40,39 @@ export const ChatInput = ({ apiUrl, query, name, type }: ChatInputProps) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(apiUrl, "apiurl");
     try {
       const url = qs.stringifyUrl({
         url: apiUrl,
         query,
       });
-      await axios.post(url, values);
+      const response = await axios.post(url, values);
+
+      // 로컬 상태 즉시 업데이트
+      queryClient.setQueryData([`chat:${query.channelId}`], (oldData: any) => {
+        if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+          return {
+            pages: [
+              {
+                items: [response.data],
+              },
+            ],
+          };
+        }
+
+        const newData = [...oldData.pages];
+        newData[0] = {
+          ...newData[0],
+          items: [response.data, ...newData[0].items],
+        };
+
+        return {
+          ...oldData,
+          pages: newData,
+        };
+      });
+
       form.reset();
-      router.refresh();
+      // router.refresh() 제거
     } catch (error) {
       console.log(error, "chat-input:onSubmit=>error?");
     }
