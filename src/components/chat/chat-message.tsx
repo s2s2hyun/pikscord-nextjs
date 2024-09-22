@@ -95,7 +95,7 @@ export const ChatMessage = ({
   //   );
   // }
 
-  // console.log({ hasNextPage, isFetchingNextPage });
+  console.log(hasNextPage, isFetchingNextPage);
 
   // console.log(data, "data!@?!?!?!");
 
