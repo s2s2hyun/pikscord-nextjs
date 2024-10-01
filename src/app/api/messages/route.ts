@@ -13,6 +13,8 @@ export async function GET(req: Request) {
     const cursor = searchParams.get("cursor");
     const channelId = searchParams.get("channelId");
 
+    console.log(cursor, "cursor 지금 뭔가 잘못된가?");
+
     if (!profile) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
@@ -24,6 +26,7 @@ export async function GET(req: Request) {
     let messages: Message[] = [];
 
     if (cursor) {
+      // 커서가 있는 경우 (페이지네이션 요청)
       messages = await db.message.findMany({
         take: MESSAGES_BATCH,
         skip: 1,
@@ -33,7 +36,6 @@ export async function GET(req: Request) {
         where: {
           channelId,
         },
-
         include: {
           member: {
             include: {
@@ -46,7 +48,9 @@ export async function GET(req: Request) {
         },
       });
     } else {
+      // 초기 요청 (커서 없이 처음 10개만 가져오기)
       messages = await db.message.findMany({
+        take: MESSAGES_BATCH, // 처음 요청 시에도 10개씩만 가져오기
         where: {
           channelId,
         },
@@ -63,11 +67,14 @@ export async function GET(req: Request) {
       });
     }
 
+    // 다음 커서를 설정
     let nextCursor = null;
-
     if (messages.length === MESSAGES_BATCH) {
-      nextCursor = messages[MESSAGES_BATCH - 1].id;
+      nextCursor = messages[messages.length - 1].id;
     }
+
+    console.log("Messages length:", messages.length);
+    console.log("Next cursor:", nextCursor);
 
     return NextResponse.json({
       items: messages,

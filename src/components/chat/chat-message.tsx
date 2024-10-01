@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { Fragment, useRef, ElementRef, useEffect } from "react";
 import { ChatItem } from "./chat-item";
 import { useChatSocket } from "@/hooks/use-chat-socket";
+import { useChatScroll } from "@/hooks/use-chat-scroll";
 
 const DATE_FORMAT = "d MMM yyyy, HH:mm";
 
@@ -78,6 +79,14 @@ export const ChatMessage = ({
       paramValue,
     });
 
+  useChatScroll({
+    chatRef,
+    bottomRef,
+    loadMore: fetchNextPage,
+    shouldLoadMore: !isFetchingNextPage && !!hasNextPage,
+    count: data?.pages?.[0]?.items?.length ?? 0,
+  });
+
   useChatSocket({
     queryKey,
     addKey,
@@ -127,7 +136,7 @@ export const ChatMessage = ({
             <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
           ) : (
             <button
-              className="h-6 w-6 text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition"
+              className="h-6 w-[100pxㄴ] text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition"
               onClick={() => fetchNextPage()} // fetchNextPage 함수 호출 추가
             >
               이전 메시지
